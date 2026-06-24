@@ -28,8 +28,9 @@ pipeline {
                         }
                     }
                     steps {
-                        // Unit tests with Vitest
-                        sh 'npx vitest run --reporter=verbose'
+                        // Install dependencies in the test container before running Vitest
+                        sh 'npm ci'
+                        sh 'npm run test:unit -- --reporter=verbose'
                     }
                 }
             }
