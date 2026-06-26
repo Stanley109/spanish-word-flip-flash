@@ -1,7 +1,7 @@
 pipeline {
     //agent any means that the pipeline can run on any available agent.
     agent any
-    
+
     options {
         ansiColor('xterm')
     }
@@ -91,7 +91,7 @@ pipeline {
                         reportFiles: 'index.html',
                         reportName: 'Playwright HTML Report',
                         reportTitles: '',
-                        useWrapperFileDirectory: true
+                        useWrapperFileDirectly: true
                     ])
                     junit stdioRetention: 'ALL', testResults: 'report-e2e/junit.xml'
                 }
