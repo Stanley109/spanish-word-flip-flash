@@ -87,7 +87,7 @@ pipeline {
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: false,
-                        reportDir: 'report-e2e/html/',
+                        reportDir: 'reports-e2e/html/',
                         reportFiles: 'index.html',
                         reportName: 'Playwright HTML Report',
                         reportTitles: '',
