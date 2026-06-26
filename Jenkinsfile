@@ -81,7 +81,7 @@ pipeline {
                 //always means that the following actions will be executed regardless of the stage result (success, failure, or unstable).                         
                 always {
                     // Publish the Playwright report to Jenkins
-                    publishHTML(target: [
+                    publishHTML([
                         // allowMissing: false means that if the report is missing, the build will fail. 
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
