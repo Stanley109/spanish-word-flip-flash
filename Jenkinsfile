@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    //agent any means that the pipeline can run on any available agent.
     
     options {
         ansiColor('xterm')
@@ -74,6 +74,26 @@ pipeline {
             }
             steps {
                 sh 'npx playwright test'
+            }
+
+            // post means that after the stage is completed, the following actions will be executed.
+            post { 
+                //always means that the following actions will be executed regardless of the stage result (success, failure, or unstable).                         
+                always {
+                    // Publish the Playwright report to Jenkins
+                    publishHTML(target: [
+                        // allowMissing: false means that if the report is missing, the build will fail. 
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: false,
+                        reportDir: 'report-e2e/html/',
+                        reportFiles: 'index.html',
+                        reportName: 'Playwright HTML Report',
+                        reportTitles: '',
+                        useWrapperFileDirectory: true
+                    ])
+                    junit stdioRetention: 'ALL', testResults: 'report-e2e/junit.xml'
+                }
             }
         }
     }
