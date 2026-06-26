@@ -69,7 +69,7 @@ pipeline {
                 }
                 
             }
-            environement{
+            environment{
                 E2E_BASE_URL = 'http://spanish-cards.netlify.app'
             }
             steps{
