@@ -37,7 +37,7 @@ pipeline {
                     agent {
                         docker {
                             //use playwright docker image with 1.54.2 version and jammy base image
-                            image 'mcr.microsoft.com/playwright:v1.54.2-jammy'       //use playwright docker image with 1.54.2 version and jammy base image
+                            image 'mcr.microsoft.com/playwright:v1.54.2-jammy'       
                             //reuse the same node workspace to avoid re-downloading dependencies and no need to use npm ci again
                             reuseNode true                                           
                         }
@@ -58,6 +58,22 @@ pipeline {
             steps {
                 // Mock deployment which does nothing
                 echo 'Mock deployment was successful!'
+            }
+        }
+
+        stage('e2e'){
+            agent{
+                docker{
+                    image: 'mcr.microsoft.com/playwright:v1.54.2-jammy'
+                    reuseNode true
+                }
+                
+            }
+            environement{
+                E2E_BASE_URL = 'http://spanish-cards.netlify.app'
+            }
+            steps{
+                sh 'npx playwright test'
             }
         }
     }
