@@ -40,6 +40,7 @@ pipeline {
                             image 'mcr.microsoft.com/playwright:v1.54.2-jammy'       //use playwright docker image with 1.54.2 version and jammy base image
                             //reuse the same node workspace to avoid re-downloading dependencies and no need to use npm ci again
                             reuseNode true                                           
+                        }
                     }
                     steps {
                         sh 'npx playwright test'
