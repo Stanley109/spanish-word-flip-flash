@@ -1,6 +1,6 @@
 name: CI
 
-on:
+on:                                       #this section defines the events that will trigger the workflow. in this case, the workflow will run on push to the main branch, on pull requests, and when manually triggered using workflow_dispatch.
   push:
     branches: [ main ]
   pull_request:
