@@ -61,6 +61,12 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright Tests      #run the integration tests using Playwright.
         run: npx playwright test
+      - uses: actions/upload-artifact@v4  #upload the test results as an artifact. this is useful for debugging failed tests.
+        if: ${{ !cancelled() }}  #this will only upload the artifact if the job was not cancelled. this is useful for debugging failed tests.
+        with:
+          name: Integration Test (Playwright)
+          path: reports-e2e/html/
+          if-no-files-found: error  #this will cause the job to fail if the artifact is not found. this is useful for debugging failed tests.
 
   deploy:
     name: Deploy (mock)

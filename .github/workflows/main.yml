@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.ref }}               #this will create a unique concurrency group for each branch. so if you have multiple branches, they will not cancel each other.
+  cancel-in-progress: true                  #this will cancel any in-progress runs of the same concurrency group. so if you push multiple commits to the same branch, only the latest one will run.
 
 jobs:
   build:
@@ -61,6 +61,12 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright Tests      #run the integration tests using Playwright.
         run: npx playwright test
+      - uses: actions/upload-artifact@v4  #upload the test results as an artifact. this is useful for debugging failed tests.
+        if: ${{ !cancelled() }}  #this will only upload the artifact if the job was not cancelled. this is useful for debugging failed tests.
+        with:
+          name: Integration Test (Playwright)
+          path: reports-e2e/html/   #this is the path to the directory where the test results are stored. this is relative to the root of the repository. this is where playwright will output the test results in html format.
+          if-no-files-found: error  #this will cause the job to fail if the artifact is not found. this is useful for debugging failed tests.
 
   deploy:
     name: Deploy (mock)
