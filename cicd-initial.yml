@@ -47,19 +47,19 @@ jobs:
         run: npx vitest run --reporter=verbose
   
   test_integration:
-    name: Integration Tests             //this is just a name for the job.
-    runs-on: ubuntu-latest              //runs on github-hosted ubuntu-latest runner. not docker container.
-    needs: build                        //this job will only run if the 'build' job is successful.
+    name: Integration Tests             #this is just a name for the job.
+    runs-on: ubuntu-latest              #runs on github-hosted ubuntu-latest runner. not docker container.
+    needs: build                        #this job will only run if the 'build' job is successful.
     steps:
-      - uses: actions/checkout@v4       //checkout the code from the repository.
-      - uses: actions/setup-node@v4     //setup node.js environment.
+      - uses: actions/checkout@v4       #checkout the code from the repository.
+      - uses: actions/setup-node@v4     #setup node.js environment.
         with:
-          node-version: 22              //specify the node.js version to use.
-      - name: Install dependencies      //install the project dependencies using npm ci command.
+          node-version: 22              #specify the node.js version to use.
+      - name: Install dependencies      #install the project dependencies using npm ci command.
         run: npm ci
-      - name: Install Playwright Browsers  //install the necessary browsers for Playwright testing.
+      - name: Install Playwright Browsers  #install the necessary browsers for Playwright testing.
         run: npx playwright install --with-deps
-      - name: Run Playwright Tests      //run the integration tests using Playwright.
+      - name: Run Playwright Tests      #run the integration tests using Playwright.
         run: npx playwright test
 
   deploy:
