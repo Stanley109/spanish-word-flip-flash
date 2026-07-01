@@ -65,10 +65,18 @@ jobs:
   deploy:
     name: Deploy (mock)
     runs-on: ubuntu-latest
-    needs: [test_unit]
+    needs: [test_unit, test_integration]
     container:
       image: alpine:latest
     steps:
       - name: Mock deployment
         run: echo 'Mock deployment was successful!'
+  
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+    container:
+      image: mcr.microsoft.com/playwright:v1.54.2-jammy
+      
 

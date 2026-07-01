@@ -65,10 +65,24 @@ jobs:
   deploy:
     name: Deploy (mock)
     runs-on: ubuntu-latest
-    needs: [test_unit]
+    needs: [test_unit, test_integration]       #this job will only run if the 'test_unit' and 'test_integration' jobs are successful.
     container:
       image: alpine:latest
     steps:
       - name: Mock deployment
         run: echo 'Mock deployment was successful!'
-
+  
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: deploy
+    container:
+      image: mcr.microsoft.com/playwright:v1.54.2-jammy  #the version has to be exactly the same as in the package.json file.
+      options: --user 1001      # this allows firefox create a profile directory in the container. 1001 is the user id of the default user in the container. without this, firefox will fail to run with an error about not being able to create a profile directory.
+    env:
+      E2E_BASE_URL: https://spanish-cards.netlify.app
+    steps:                      #since we are using docker image, we don't need to setup node.js and playwright browsers. they are already included in the image. we just need to install the dependencies and run the tests.
+      - name: Install deps
+        run: npm ci
+      - name: Run Playwright E2E
+        run: npx playwright test
