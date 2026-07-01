@@ -13,6 +13,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ['list'],
+    ['github'],         // this reporter is used to report test results in GitHub Actions. It will show the test results in the Actions tab of the repository.
     ['junit', { outputFile: 'reports-e2e/junit.xml' }],
     ['html', { outputFolder: 'reports-e2e/html', open: 'never' }],
   ],
