@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest              #runs on github-hosted ubuntu-latest runner. not docker container.
     needs: build                        #this job will only run if the 'build' job is successful.
     steps:
-      - uses: actions/checkout@v4       #checkout the code from the repository.
+      - uses: actions/checkout@v4       #checkout the code from the repository. this is mandatory for every job that needs to access the codebase.
       - uses: actions/setup-node@v4     #setup node.js environment.
         with:
           node-version: 22              #specify the node.js version to use.
@@ -82,6 +82,7 @@ jobs:
     env:
       E2E_BASE_URL: https://spanish-cards.netlify.app
     steps:                      #since we are using docker image, we don't need to setup node.js and playwright browsers. they are already included in the image. we just need to install the dependencies and run the tests.
+      - uses: actions/checkout@v4
       - name: Install deps
         run: npm ci
       - name: Run Playwright E2E
