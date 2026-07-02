@@ -4,7 +4,26 @@ on:                                       #this section defines the events that 
   push:
     branches: [ main ]
   pull_request:
+  schedule:
+    - cron: '0 0 * * *'                    #this will run the workflow every day at midnight. you can change the cron expression to run it at a different time or frequency.
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'sit'
+        type: choice
+        options:
+          - sit
+          - uat
+      suite:
+        description: 'Test suite to run'
+        required: true
+        default: 'smoke'
+        type: choice
+        options:
+          - all
+          - smoke
 
 concurrency:
   group: ci-${{ github.ref }}               #this will create a unique concurrency group for each branch. so if you have multiple branches, they will not cancel each other.
@@ -47,7 +66,7 @@ jobs:
         run: npx vitest run --reporter=verbose 
 
   test_integration:
-    name: Integration Tests             #this is just a name for the job.
+    name: Integration Tests (${{github.event.inputs.suite || smoke }} / ${{github.event.inputs.environment || all }})     #this is just a name for the job.
     runs-on: ubuntu-latest              #runs on github-hosted ubuntu-latest runner. not docker container.
     needs: build                        #this job will only run if the 'build' job is successful.
     steps:
@@ -87,9 +106,12 @@ jobs:
       options: --user 1001      # this allows firefox create a profile directory in the container. 1001 is the user id of the default user in the container. without this, firefox will fail to run with an error about not being able to create a profile directory.
     env:
       E2E_BASE_URL: https://spanish-cards.netlify.app
+      USERNAME: ${{ secrets.USERNAME }}
     steps:                      #since we are using docker image, we don't need to setup node.js and playwright browsers. they are already included in the image. we just need to install the dependencies and run the tests.
       - uses: actions/checkout@v4
       - name: Install deps
         run: npm ci
       - name: Run Playwright E2E
         run: npx playwright test
+      - name: Echo
+        run: echo ${{ USERNAME }}
